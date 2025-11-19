@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react"
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { PlusCircle, Search, Upload, X } from 'lucide-react'
+import { PlusCircle, Search, Upload, X, Sparkles } from 'lucide-react'
 import PromptCard from "@/components/prompt-card"
 import TagFilter from "@/components/tag-filter"
 import CategorySidebar from "@/components/category-sidebar"
@@ -18,12 +18,15 @@ import { usePromptExport } from "@/hooks/use-prompt-export"
 import { seedPromptFrameworks } from "@/lib/seed-frameworks"
 import { useDebounce } from "@/hooks/use-debounce"
 import { Skeleton } from "@/components/ui/skeleton"
+import { generateCombinationPrompts } from "@/lib/prompt-combinations"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function Home() {
   const router = useRouter()
   const { importPrompt } = usePromptExport()
   const [prompts, setPrompts] = useState<Prompt[]>([])
   const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([])
+  const [combinationPrompts, setCombinationPrompts] = useState<Prompt[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -57,11 +60,21 @@ export default function Home() {
       all: prompts.length,
       favorites: prompts.filter((p) => p.isFavorite).length,
       video: prompts.filter((p) => p.category === "video").length,
+      automation: prompts.filter((p) => p.category === "automation").length,
       frameworks: prompts.filter((p) => p.isFramework).length,
       custom: prompts.filter((p) => !p.isFramework).length,
       recent: prompts.slice(0, 10).length,
     }
   }, [prompts])
+
+  useEffect(() => {
+    if (selectedTags.length >= 2) {
+      const combinations = generateCombinationPrompts(selectedTags)
+      setCombinationPrompts(combinations)
+    } else {
+      setCombinationPrompts([])
+    }
+  }, [selectedTags])
 
   useEffect(() => {
     let result = [...prompts]
@@ -71,6 +84,8 @@ export default function Home() {
       result = result.filter((p) => p.isFavorite)
     } else if (selectedCategory === "video") {
       result = result.filter((p) => p.category === "video")
+    } else if (selectedCategory === "automation") {
+      result = result.filter((p) => p.category === "automation")
     } else if (selectedCategory === "frameworks") {
       result = result.filter((p) => p.isFramework)
     } else if (selectedCategory === "custom") {
@@ -144,6 +159,8 @@ export default function Home() {
   }
 
   const hasActiveFilters = searchQuery || selectedTags.length > 0 || selectedCategory !== "all"
+
+  const totalResults = filteredPrompts.length + combinationPrompts.length
 
   if (isLoading) {
     return (
@@ -278,13 +295,27 @@ export default function Home() {
             )}
           </div>
 
+          {combinationPrompts.length > 0 && (
+            <Alert className="mb-6 border-primary/50 bg-primary/5">
+              <Sparkles className="h-4 w-4" />
+              <AlertDescription>
+                {combinationPrompts.length} dynamic combination prompt{combinationPrompts.length > 1 ? 's' : ''} generated based on your selected tags! These appear first in the results.
+              </AlertDescription>
+            </Alert>
+          )}
+
           {/* Results count */}
           <div className="mb-4 text-sm text-muted-foreground">
-            Showing {filteredPrompts.length} of {prompts.length} prompts
+            Showing {totalResults} of {prompts.length} prompts
+            {combinationPrompts.length > 0 && (
+              <span className="text-primary font-medium">
+                {' '}({combinationPrompts.length} combination{combinationPrompts.length > 1 ? 's' : ''})
+              </span>
+            )}
           </div>
 
           {/* Prompt grid */}
-          {filteredPrompts.length === 0 ? (
+          {totalResults === 0 ? (
             <div className="text-center py-12 border rounded-lg bg-muted/20">
               <h3 className="text-xl font-medium mb-2">No prompts found</h3>
               <p className="text-muted-foreground mb-4">
@@ -304,10 +335,42 @@ export default function Home() {
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredPrompts.map((prompt) => (
-                <PromptCard key={prompt.id} prompt={prompt} onUpdate={loadPrompts} />
-              ))}
+            <div className="space-y-8">
+              {combinationPrompts.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <h2 className="text-lg font-semibold">Dynamic Combinations</h2>
+                    <Badge variant="outline" className="ml-auto">
+                      AI-Generated
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {combinationPrompts.map((prompt) => (
+                      <div key={prompt.id} className="relative">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-primary/30 rounded-lg blur opacity-30" />
+                        <div className="relative">
+                          <PromptCard prompt={prompt} onUpdate={loadPrompts} isCombination />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Original filtered prompts */}
+              {filteredPrompts.length > 0 && (
+                <div>
+                  {combinationPrompts.length > 0 && (
+                    <h2 className="text-lg font-semibold mb-4">Matching Prompts</h2>
+                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {filteredPrompts.map((prompt) => (
+                      <PromptCard key={prompt.id} prompt={prompt} onUpdate={loadPrompts} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
