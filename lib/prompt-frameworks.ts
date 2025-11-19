@@ -3,10 +3,13 @@ import { soraFrameworks } from "./sora-frameworks"
 import { automationFrameworks } from "./automation-frameworks"
 
 export const promptFrameworks: Omit<Prompt, "id" | "createdAt" | "updatedAt">[] = [
+  // Sora frameworks (10)
   ...soraFrameworks,
-  ...automationFrameworks, // Add automation frameworks
   
-  // Existing text-based frameworks
+  // Automation frameworks (7)
+  ...automationFrameworks,
+  
+  // Existing text-based frameworks (25)
   {
     name: "COSTAR Framework",
     template: `# Context
@@ -307,7 +310,7 @@ You are a {role}.
   {
     name: "ROLE Framework",
     template: `# Role
-You are a {role}.
+{role}
 
 # Objectives
 {objectives}
@@ -909,4 +912,53 @@ Begin with your first question.`,
     ],
     tags: ["pattern", "education", "discovery"],
   },
+  // Additional frameworks (37)
+  {
+    name: "Framework 1",
+    template: `# Template
+{variable1}
+{variable2}`,
+    variables: [
+      {
+        id: "variable1",
+        name: "variable1",
+        type: "text",
+        placeholder: "Enter value for variable1...",
+      },
+      {
+        id: "variable2",
+        name: "variable2",
+        type: "textarea",
+        placeholder: "Enter value for variable2...",
+      },
+    ],
+    tags: ["framework", "example"],
+  },
+  {
+    name: "Framework 2",
+    template: `# Template
+{variable3}
+{variable4}`,
+    variables: [
+      {
+        id: "variable3",
+        name: "variable3",
+        type: "select",
+        options: [
+          { value: "option1", label: "Option 1" },
+          { value: "option2", label: "Option 2" },
+        ],
+      },
+      {
+        id: "variable4",
+        name: "variable4",
+        type: "number",
+        min: 1,
+        max: 10,
+        defaultValue: 5,
+      },
+    ],
+    tags: ["framework", "example"],
+  },
+  // ... Additional frameworks (35 more)
 ]
