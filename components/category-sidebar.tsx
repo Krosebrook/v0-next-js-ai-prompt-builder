@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { LayoutGrid, Star, Sparkles, User, History, Video } from 'lucide-react'
+import { LayoutGrid, Star, Sparkles, User, History, Video, Workflow } from 'lucide-react'
 import { cn } from "@/lib/utils"
 
 interface CategorySidebarProps {
@@ -18,6 +18,7 @@ const categories = [
   { id: "all", label: "All Prompts", icon: LayoutGrid },
   { id: "favorites", label: "Favorites", icon: Star },
   { id: "video", label: "Video (Sora)", icon: Video },
+  { id: "automation", label: "Automation", icon: Workflow },
   { id: "frameworks", label: "Frameworks", icon: Sparkles },
   { id: "custom", label: "My Prompts", icon: User },
   { id: "recent", label: "Recently Used", icon: History },

@@ -1,8 +1,10 @@
 import type { Prompt } from "./types"
 import { soraFrameworks } from "./sora-frameworks"
+import { automationFrameworks } from "./automation-frameworks"
 
 export const promptFrameworks: Omit<Prompt, "id" | "createdAt" | "updatedAt">[] = [
   ...soraFrameworks,
+  ...automationFrameworks, // Add automation frameworks
   
   // Existing text-based frameworks
   {

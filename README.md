@@ -5,13 +5,14 @@ A production-grade web application for creating, managing, and executing reusabl
 ## Features
 
 ### Phase 1: Core UX & Framework Integration ✓
-- **35 pre-built prompt frameworks** including:
+- **42 pre-built prompt frameworks** including:
   - **Sora 2 Video Generation** (10 frameworks): Basic shot structure, cinematic detailed, user cameo, character cameo, multi-character scenes, camera movement, lighting design, animation style, product/commercial, documentary/interview
+  - **Automation & Workflow** (7 frameworks): Make.com, Zapier, n8n, Pipedream, LangChain, CrewAI, AutoGen
   - **Text Generation** (25 frameworks): COSTAR, APE, RACE, CRISPE, ROSES, TRACE, ROLE, Chain of Thought, Few-Shot, ReAct, and more
 - Smart framework initialization with version tracking
 - Advanced search with debouncing (300ms)
 - Multi-select tag filtering
-- Category navigation (All, Favorites, Video (Sora), Frameworks, Custom, Recent)
+- Category navigation (All, Favorites, Video (Sora), Automation, Frameworks, Custom, Recent)
 - Sort options (name, date created, date updated)
 - Favorites system
 - Real-time prompt preview
@@ -76,7 +77,7 @@ npm start
 
 ### Using Frameworks
 
-The app comes with 35 pre-built prompt frameworks:
+The app comes with 42 pre-built prompt frameworks:
 
 #### Video Generation (Sora 2) - 10 Frameworks
 Based on OpenAI's official Sora 2 prompting guide and best practices:
@@ -90,6 +91,61 @@ Based on OpenAI's official Sora 2 prompting guide and best practices:
 - **Animation Style**: Hand-drawn, stop-motion, and stylized animation
 - **Product/Commercial Shot**: Professional product showcases
 - **Documentary/Interview Style**: Interview and documentary formats
+
+#### Automation & Workflow - 7 Frameworks
+Conversational prompt frameworks for popular automation platforms based on the provided workflows:
+
+- **Make.com Conversational Workflow**: Multi-step workflows with triggers, actions, and error handling
+  - Define workflow in natural language
+  - Specify trigger events (webhooks, schedules, app events)
+  - Chain actions with data transformations
+  - Configure error handling strategies
+  
+- **Zapier Conversational Zap**: Simple automation between apps
+  - Describe automation goal clearly
+  - Define starting trigger
+  - List apps and step-by-step actions
+  - Add filters and conditions
+  
+- **n8n Workflow Builder**: Self-hosted automation with LLM integration
+  - Multiple trigger types (webhook, schedule, chat, email, file, database)
+  - Complex data processing workflows
+  - Optional AI/LLM integration for intelligent processing
+  - Flexible output destinations
+  
+- **Pipedream Conversational Flow**: Serverless event-driven workflows
+  - HTTP, schedule, email, webhook, and SSE triggers
+  - Multi-API integrations
+  - Optional conversation context memory
+  - Multiple response formats (email, JSON, Slack, SMS, Discord)
+  
+- **LangChain Conversational Agent**: AI agents with tools and memory
+  - Define agent purpose and personality
+  - Specify available tools (search, create tickets, check status)
+  - Configure knowledge sources (RAG/vector stores)
+  - Memory configuration (buffer, summary, window)
+  - Safety constraints and guardrails
+  
+- **CrewAI Multi-Agent Workflow**: Coordinated multi-agent systems
+  - Define crew mission and agent roles
+  - Task assignment and distribution logic
+  - Inter-agent communication patterns
+  - Multiple input triggers (chat, email, form, API, schedule)
+  - Success criteria and output delivery
+  
+- **AutoGen Conversable Agent**: Collaborative code generation agents
+  - Define agent scenario and goals
+  - Configure conversable agents (coder, reviewer, user proxy)
+  - Human-in-the-loop settings (always, approval, errors, never)
+  - Iteration and refinement process
+  - Code generation with validation
+  - Termination conditions
+
+These frameworks enable natural language workflow creation by:
+1. Breaking down complex automation into conversational inputs
+2. Supporting multi-turn context where relevant
+3. Providing structured templates for platform-specific requirements
+4. Enabling both simple and complex orchestration patterns
 
 #### Text Generation - 25 Frameworks
 - **COSTAR**: Context, Objective, Style, Tone, Audience, Response
@@ -136,7 +192,7 @@ The Sora frameworks implement official OpenAI guidelines:
 
 ### Organizing Prompts
 
-- **Categories**: All, Favorites, Video (Sora), Frameworks, Custom, Recent
+- **Categories**: All, Favorites, Video (Sora), Automation, Frameworks, Custom, Recent
 - **Search**: Real-time search across names, content, and tags
 - **Tags**: Multi-select filtering with AND logic
 - **Sort**: By name, creation date, or update date
@@ -189,7 +245,7 @@ interface Prompt {
   template: string
   variables: Variable[]
   tags: string[]
-  category?: string // "video" for Sora prompts, "frameworks" for text
+  category?: string // "video" for Sora, "automation" for workflows, "frameworks" for text
   isFavorite?: boolean
   isFramework?: boolean
   version?: number
@@ -265,8 +321,9 @@ interface PromptRevision {
 │   ├── types.ts              # TypeScript interfaces
 │   ├── validation.ts         # Zod schemas
 │   ├── export-utils.ts       # Export/import utilities
-│   ├── prompt-frameworks.ts  # All 35 framework templates
+│   ├── prompt-frameworks.ts  # All 42 framework templates
 │   ├── sora-frameworks.ts    # 10 Sora 2 video frameworks
+│   ├── automation-frameworks.ts # 7 Automation & Workflow frameworks
 │   └── seed-frameworks.ts    # Framework seeding logic
 └── hooks/
     ├── use-debounce.ts

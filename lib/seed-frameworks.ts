@@ -2,7 +2,7 @@ import { storage } from "./storage"
 import { promptFrameworks } from "./prompt-frameworks"
 import type { Prompt } from "./types"
 
-const FRAMEWORK_VERSION = "2.0.0"
+const FRAMEWORK_VERSION = "3.0.0"
 const VERSION_KEY = "ai-prompt-builder-framework-version"
 
 export async function seedPromptFrameworks(): Promise<void> {
