@@ -212,6 +212,10 @@ export default function Home() {
               </p>
             </div>
             <div className="flex gap-2 flex-wrap">
+              <Button variant="outline" onClick={() => router.push('/storyboards')}>
+                <Sparkles className="mr-2 h-4 w-4" />
+                App Studio
+              </Button>
               <BulkOperationsMenu onRefresh={loadPrompts} />
               <ResetFrameworksDialog onReset={loadPrompts} />
               <Button variant="outline" onClick={() => importPrompt(handleImportPrompt)}>
